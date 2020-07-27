@@ -4,7 +4,9 @@
 \name{myIC}
 \alias{myIC}
 \title{An example of IC values}
-\format{An object of class \code{numeric} of length 3.}
+\format{
+An object of class \code{numeric} of length 3.
+}
 \usage{
 data(myIC)
 }
