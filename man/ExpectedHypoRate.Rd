@@ -15,11 +15,11 @@ ExpectedHypoRate(
 )
 }
 \arguments{
-\item{VCOV}{A square matrix denoting the covariance matrix of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with covariance matrix VCOV.}
+\item{VCOV}{A square (p times p) matrix denoting the covariance matrix of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with covariance matrix VCOV.}
 
 \item{NrHypos}{The number of theory-based hypotheses in the set of candidate hypotheses (is a scalar with an integer value).}
 
-\item{Hypos}{A vector of strings containing the NrHypos theory-based hypotheses.}
+\item{Hypos}{A vector of strings containing the NrHypos theory-based hypotheses (on the p estimates). These should either use the names X1 to Xp or the names (characters) given to mu (see the last example below).}
 
 \item{Safeguard}{Indicator of which safeguard-hypothesis should be used: "unconstrained" (default; i.e., all possible theories including the one specified), "none" (only advised when set of hyptheses cover all theories), or (only when 'NrHypos = 1') "complement" (i.e., the remaining theories).}
 
@@ -27,7 +27,7 @@ ExpectedHypoRate(
 
 \item{seed}{Optional. The seed value used in the calculation. By default, seed = 123. This can be used for a sensitivty check. If for another seed value the results unnegligibly differ, then nsim has to be increased.}
 
-\item{mu}{A vector denoting the population value of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with mean mu.}
+\item{mu}{A (named) vector (of length p) denoting the population value of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with mean mu.}
 }
 \value{
 This function renders 3 types of output.
@@ -74,6 +74,17 @@ H1 <- "X1 < X2; X3 < X4; X5 < X6"
 H2 <- "X1 > X2; X3 > X4; X5 > X6"
 Hypos <- c(H1, H2) # Currently, in case of multiple theory-based hypotheses in the set, one cannot use the complement of these as safeguard, so:
 Safeguard <- "unconstrained" # which is the default, so could be left out
+ExpectedHypoRate(mu, VCOV, NrHypos, Hypos, Safeguard)
+
+# Example with named vector mu.
+p <- 6
+mu <- rep(0, p) # mu is in accordance with H0: X1 = X2 = X3 = X4 = X5 = X6 (or H0 <- "X1 == X2; X3 == X4; X5 == X6")
+names(mu) <- c("beta12", "beta21", "beta13", "beta31", "beta23", "beta32")
+VCOV <- diag(p) # Here, the variances of the parameters are 1 and the covariances are 0
+NrHypos <- 1
+H1 <- "beta12 < beta21; beta13 < beta31; beta23 < beta32" # This should now use the names of mu
+Hypos <- c(H1)
+Safeguard <- "complement"
 ExpectedHypoRate(mu, VCOV, NrHypos, Hypos, Safeguard)
 
 }
