@@ -23,7 +23,13 @@ IC <- myIC # Example based on 3 hypotheses.
 IC.weights(IC)
 
 # Change labels of hypotheses #
-# For example, let us say that we tested a linear model vs quadratic vs cubic.
+#
+# Example 1: Let us say that we evaluated H1: beta1 > beta2; H2: beta1 = beta2; and H3: beta1 < beta2.
+Name_Hypo <- c("Higher", "Equal", "Smaller")
+IC.weights(IC, Name_Hypo)
+#
+# Example 2: Let us say that we evaluated a linear, quadratic, and cubic model.
+# Notably, this can als be represented by H1: beta_linear, beta_quadratic = 0, beta_cubic = 0; H2: beta_linear, beta_quadratic, beta_cubic = 0; and Hunc: beta_linear, beta_quadratic, beta_cubic (i.e., no restrictions on the beta's).
 Name_Hypo <- c("Linear", "Quadratic", "Cubic")
 IC.weights(IC, Name_Hypo)
 }
