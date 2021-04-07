@@ -1,4 +1,6 @@
-#'  @export
+#' @S3method print ICw
+#' @export print.ICw
+#' @export
 
 print.ICw <- function(x)
 {
@@ -9,7 +11,6 @@ print.ICw <- function(x)
                    rel.IC.weights = x$rel.IC.weights)
   print(DF, digits = 4, right = F)
 
-  class(DF) <- "print.ICw"
   return(invisible(DF))
 
 }

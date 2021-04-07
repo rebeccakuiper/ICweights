@@ -7,6 +7,8 @@
 #' @param Name_Hypo Optional. Vector containing 'NrHypos' characters which will be used for labeling the hypothesis. Default: H1, H2, ....
 #'
 #' @return IC weights, which quantify the relative strength of hypotheses/models.
+#' @export print.ICw
+#' @export summary.ICw
 #' @export
 #' @examples
 #'
