@@ -10,15 +10,17 @@ summary.ICw <- function(x, digits = NULL)
   if(is.null(digits)){
     NrDigits <- 3
     sig.digits <- TRUE
+    align <- NULL
   }else{
     NrDigits <- digits
     sig.digits <- FALSE
+    align <- 'c'
   }
 
   DF <- data.frame(IC = x$IC,
                    IC.weights = x$IC.weights,
                    rel.IC.weights = x$rel.IC.weights)
 
-  md_table(DF, digits = NrDigits, sig.digits = sig.digits, align = 'c')
+  md_table(DF, digits = NrDigits, sig.digits = sig.digits, align = align)
 
 }
