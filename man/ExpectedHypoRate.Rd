@@ -21,17 +21,17 @@ ExpectedHypoRate(
 
 \item{Hypos}{A vector of strings containing the NrHypos theory-based hypotheses (on the p estimates). These should either use the names X1 to Xp or the names (characters) given to mu (see the last example below).}
 
-\item{Safeguard}{Indicator of which safeguard-hypothesis should be used: "unconstrained" (default; i.e., all possible theories including the one specified), "none" (only advised when set of hyptheses cover all theories), or (only when 'NrHypos = 1') "complement" (i.e., the remaining theories).}
+\item{Safeguard}{Indicator of which safeguard-hypothesis should be used: "unconstrained" (default; i.e., all possible theories including the one specified), "none" (only advised when set of hypotheses cover all theories), or (only when 'NrHypos = 1') "complement" (i.e., the remaining theories).}
 
-\item{nsim}{Optional. The number of iterations used in the calculation. By default, nsim = 1000. The higher nsim, the higher the precision but als the higher the computation time.}
+\item{nsim}{Optional. The number of iterations used in the calculation. By default, nsim = 1000. The higher nsim, the higher the precision but also the higher the computation time.}
 
-\item{seed}{Optional. The seed value used in the calculation. By default, seed = 123. This can be used for a sensitivty check. If for another seed value the results unnegligibly differ, then nsim has to be increased.}
+\item{seed}{Optional. The seed value used in the calculation. By default, seed = 123. This can be used for a sensitivity check. If for another seed value, the results not-negligibly / relevantly differ, then nsim has to be increased.}
 
 \item{mu}{A (named) vector (of length p) denoting the population value of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with mean mu.}
 }
 \value{
 This function renders 3 types of output.
-The first (mle_Hypos) is the percentage of times the sampled (maximum likelihood) estimates are in agreement with the hypotheses in the set, when sampled from a multivariate normal distribution with mean mu and covariance matrix VCOV. This is independent from the GORICA, in a way purely based on the log likelhood. Bear in mind that the estimates are always in agreement with the unconstrained hypothesis.
+The first (mle_Hypos) is the percentage of times the sampled (maximum likelihood) estimates are in agreement with the hypotheses in the set, when sampled from a multivariate normal distribution with mean mu and covariance matrix VCOV. This is independent from the GORICA, in a way purely based on the log likelihood. Bear in mind that the estimates are always in agreement with the unconstrained hypothesis.
 The second (HR_Hypos) is the percentage of times each hypothesis in the set is preferred under that distribution; rendering the Hypothesis Rate (HR) for H1. This is based on the GORICA and thus both the log likelihood and the penalty are taken into account.
 The third are the average GORICA weight values for the hypotheses in the set; thus either for H1 and its complement or H1 and the unconstrained hypothesis.
 }
@@ -39,6 +39,8 @@ The third are the average GORICA weight values for the hypotheses in the set; th
 This function calculates the expected (true) hypothesis rate for the hypotheses in the set under a specific hypothesis (say, H0 or H1 or even another hypothesis).
 }
 \examples{
+
+# library(ICweights)
 
 # Example based on 6 standardized parameters of interest.
 p <- 6

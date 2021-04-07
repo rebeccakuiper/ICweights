@@ -7,18 +7,20 @@
 #' @param VCOV A square (p times p) matrix denoting the covariance matrix of the (standardized) parameters. It is assumed that the (standardized) parameter estimates come from a multivariate normal distribution with covariance matrix VCOV.
 #' @param NrHypos The number of theory-based hypotheses in the set of candidate hypotheses (is a scalar with an integer value).
 #' @param Hypos A vector of strings containing the NrHypos theory-based hypotheses (on the p estimates). These should either use the names X1 to Xp or the names (characters) given to mu (see the last example below).
-#' @param Safeguard Indicator of which safeguard-hypothesis should be used: "unconstrained" (default; i.e., all possible theories including the one specified), "none" (only advised when set of hyptheses cover all theories), or (only when 'NrHypos = 1') "complement" (i.e., the remaining theories).
-#' @param nsim Optional. The number of iterations used in the calculation. By default, nsim = 1000. The higher nsim, the higher the precision but als the higher the computation time.
-#' @param seed Optional. The seed value used in the calculation. By default, seed = 123. This can be used for a sensitivty check. If for another seed value the results unnegligibly differ, then nsim has to be increased.
+#' @param Safeguard Indicator of which safeguard-hypothesis should be used: "unconstrained" (default; i.e., all possible theories including the one specified), "none" (only advised when set of hypotheses cover all theories), or (only when 'NrHypos = 1') "complement" (i.e., the remaining theories).
+#' @param nsim Optional. The number of iterations used in the calculation. By default, nsim = 1000. The higher nsim, the higher the precision but also the higher the computation time.
+#' @param seed Optional. The seed value used in the calculation. By default, seed = 123. This can be used for a sensitivity check. If for another seed value, the results not-negligibly / relevantly differ, then nsim has to be increased.
 #'
 #' @return This function renders 3 types of output.
-#' The first (mle_Hypos) is the percentage of times the sampled (maximum likelihood) estimates are in agreement with the hypotheses in the set, when sampled from a multivariate normal distribution with mean mu and covariance matrix VCOV. This is independent from the GORICA, in a way purely based on the log likelhood. Bear in mind that the estimates are always in agreement with the unconstrained hypothesis.
+#' The first (mle_Hypos) is the percentage of times the sampled (maximum likelihood) estimates are in agreement with the hypotheses in the set, when sampled from a multivariate normal distribution with mean mu and covariance matrix VCOV. This is independent from the GORICA, in a way purely based on the log likelihood. Bear in mind that the estimates are always in agreement with the unconstrained hypothesis.
 #' The second (HR_Hypos) is the percentage of times each hypothesis in the set is preferred under that distribution; rendering the Hypothesis Rate (HR) for H1. This is based on the GORICA and thus both the log likelihood and the penalty are taken into account.
 #' The third are the average GORICA weight values for the hypotheses in the set; thus either for H1 and its complement or H1 and the unconstrained hypothesis.
 #' @importFrom restriktor goric
 #' @importFrom MASS mvrnorm
 #' @export
 #' @examples
+#'
+#' # library(ICweights)
 #'
 #' # Example based on 6 standardized parameters of interest.
 #' p <- 6
@@ -68,51 +70,65 @@
 #' ExpectedHypoRate(mu, VCOV, NrHypos, Hypos, Safeguard)
 #'
 
+
 ExpectedHypoRate <- function(ES, VCOV, NrHypos, Hypos, Safeguard = "unconstrained", nsim = 1000, seed = 123) {
 
-  if(length(VCOV) == 1 & length(mu) != 1){
-    print(paste("The covariance matrix VCOV is 1 times 1, while the mean vector mu does not consist of 1 element. Change one of these such that VCOV is p times p matrix and mu is a p-vector."))
+  if(length(nsim) != 1){
+    print(paste0("The argument nsim should be a scalar, that is, one number, that is, a vector with one element. Currently, nsim = ", nsim))
     stop()
-  }else  if(length(VCOV) > 1){
+  }
+  #
+  if(length(seed) != 1){
+    print(paste0("The argument seed should be a scalar, that is, one number, that is, a vector with one element. Currently, seed = ", seed))
+    stop()
+  }
+
+  if(length(VCOV) == 1 & length(mu) != 1){
+    print(paste00("The covariance matrix VCOV is 1 times 1, while the mean vector mu does not consist of 1 element but of ", length(mu), " elements. Change one of these such that VCOV is p times p matrix and mu is a p-vector."))
+    stop()
+  }else if(length(VCOV) > 1){
     if(length(dim(VCOV)) > 2){
-      print(paste("The covariance matrix VCOV should be an p times p matrix (i.e., a square matrix) and not an array with more than 2 dimensions."))
+      print(paste00("The covariance matrix VCOV should be an p times p matrix (i.e., a square matrix), with p = ", length(mu), " and not an array with more than 2 dimensions. Currently, it is of size ", dim(VCOV)))
+      stop()
+    }else if(length(dim(VCOV)) < 2){
+      print(paste00("The covariance matrix VCOV is not a matrix. It should be a matrix of size p times p matrix, with p = ", length(mu)))
       stop()
     }else if(dim(VCOV)[1] != dim(VCOV)[2]){
-      print(paste("The covariance matrix VCOV should be a square matrix, that is, an p times p matrix."))
+      print(paste0("The covariance matrix VCOV should be a square matrix, that is, an p times p matrix, with p = ", length(mu)))
       stop()
     }else if(dim(VCOV)[1] != length(mu)){
-      print(paste("The covariance matrix VCOV is p times p, while the mean vector mu does not consist of p elements. Change one of these such that VCOV is p times p matrix and mu is a p-vector."))
+      print(paste00("The covariance matrix VCOV is p times p, with p = ", dim(VCOV)[1], " while the mean vector mu does not consist of p elements but of ", length(mu), " elements. Change one of these such that VCOV is p times p matrix and mu is a p-vector."))
       stop()
     }
   }
   #
   if(length(NrHypos) != 1){
-    print(paste("The number of hypotheses (NrHypos) should be a scalar (integer)."))
+    print(paste0("The number of hypotheses (NrHypos) should be a scalar (integer). Currently, NrHypos = ", NrHypos))
     stop()
   }
   if(length(NrHypos) == 1){
     if(NrHypos %% 1 != 0){
-      print(paste("The number of hypotheses (NrHypos) should be an integer value."))
+      print(paste0("The number of hypotheses (NrHypos) should be an integer value."))
       stop()
     }
   }
   #
   if(length(Hypos) != NrHypos){
-    print(paste("The argument (Hypos) should consist of NrHypos  = ", NrHypos, " elements (which are character strings / text elements)."))
+    print(paste0("The argument (Hypos) should consist of NrHypos  = ", NrHypos, " elements (which are character strings / text elements)."))
     stop()
   }
   if(!is.character(Hypos)){
-    print(paste("The argument (Hypos) does not contain character strings / text elements."))
+    print(paste0("The argument (Hypos) does not contain character strings / text elements."))
     stop()
   }
   #
   if(NrHypos == 1){
     if(length(Safeguard) != 1){
-      print(paste("The type of safeguard-hypothesis (Safeguard) should be one word ('unconstrained', 'none', or (if NrHypos = 1) 'complement')."))
+      print(paste0("The type of safeguard-hypothesis (Safeguard) should be one word ('unconstrained', 'none', or (if NrHypos = 1) 'complement')."))
       stop()
     }
     if(Safeguard != "unconstrained" & Safeguard != "none" & Safeguard != "complement"){
-      print(paste("The type of safeguard-hypothesis (Safeguard) should be 'unconstrained', 'none', or (if NrHypos = 1) 'complement'."))
+      print(paste0("The type of safeguard-hypothesis (Safeguard) should be 'unconstrained', 'none', or (if NrHypos = 1) 'complement'."))
       stop()
     }
   }
@@ -120,15 +136,15 @@ ExpectedHypoRate <- function(ES, VCOV, NrHypos, Hypos, Safeguard = "unconstraine
 
   p <- length(mu)
   if(is.null(names(mu))){
-    namesEst <- paste0("X", 1:p)
+    namesEst <- paste00("X", 1:p)
   }else{
     namesEst <- names(mu)
   }
 
   for(HypoTeller in 1:NrHypos){
-    eval(parse(text = paste0("H", HypoTeller, " <<- Hypos[(HypoTeller)]")))
+    eval(parse(text = paste00("H", HypoTeller, " <<- Hypos[(HypoTeller)]")))
   }
-  HypoSet <- noquote(paste0("H", 1:NrHypos, collapse = ", "))
+  HypoSet <- noquote(paste00("H", 1:NrHypos, collapse = ", "))
 
   nrhypos <- NrHypos + (Safeguard != "none")
 
@@ -145,7 +161,7 @@ ExpectedHypoRate <- function(ES, VCOV, NrHypos, Hypos, Safeguard = "unconstraine
     est <- X[i,]
     names(est) <- namesEst
     #result <- goric(est, VCOV = VCOV, HypoSet, comparison = Safeguard, type = 'gorica')
-    eval(parse(text = paste0("result <- restriktor:::goric(est, VCOV = VCOV, ",
+    eval(parse(text = paste00("result <- restriktor:::goric(est, VCOV = VCOV, ",
                              HypoSet,
                              ", comparison = Safeguard, type = 'gorica')")))
     #
@@ -174,9 +190,9 @@ ExpectedHypoRate <- function(ES, VCOV, NrHypos, Hypos, Safeguard = "unconstraine
   av.GORICA.weights <- matrix(colMeans(weight[index,]), nrow = 1, ncol = nrhypos)  # average weight values for the hypotheses in the set
 
   if(Safeguard == "none"){
-    colnames(mle_Hypos) <- colnames(HR_Hypos) <- colnames(av.GORICA.weights) <- paste0("H", 1:nrhypos)
+    colnames(mle_Hypos) <- colnames(HR_Hypos) <- colnames(av.GORICA.weights) <- paste00("H", 1:nrhypos)
   }else{
-    colnames(mle_Hypos) <- colnames(HR_Hypos) <- colnames(av.GORICA.weights) <- c(paste0("H", 1:(nrhypos-1)), Safeguard)
+    colnames(mle_Hypos) <- colnames(HR_Hypos) <- colnames(av.GORICA.weights) <- c(paste00("H", 1:(nrhypos-1)), Safeguard)
   }
   rownames(mle_Hypos) <- rownames(HR_Hypos) <- rownames(av.GORICA.weights) <- ""
 
