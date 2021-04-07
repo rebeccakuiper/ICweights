@@ -33,13 +33,14 @@
 #'
 #' # Example 3: This examples shows some output options
 #' ICw <- IC.weights(IC)
-#' ICw$IC
-#' ICw$IC.weights
-#' ICw$rel.IC.weights
 #' print(ICw)
 #' summary(ICw)
-#' print(ICw, digits = 7)
-#' summary(ICw, digits = 7)
+#' print(ICw, digits = 4)
+#' summary(ICw, digits = 4)
+#' # In Rstudio, use 'ICw$' to see what output there is. The following is available:
+#' #' ICw$IC
+#' ICw$IC.weights
+#' ICw$rel.IC.weights
 #'
 
 
