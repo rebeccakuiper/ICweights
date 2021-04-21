@@ -19,8 +19,11 @@ summary.ICw <- function(x, digits = NULL)
 
   DF <- data.frame(IC = x$IC,
                    IC.weights = x$IC.weights,
-                   rel.IC.weights = x$rel.IC.weights)
+                   ratio.IC.weights = x$ratio.IC.weights)
 
-  md_table(DF, digits = NrDigits, sig.digits = sig.digits, align = align)
+  cat("\n")
+  cat("Per hypothesis/model, the information criterion value (IC), its weight (IC.weights), and its ratio / relative support (ratio.IC.weights) versus the other hypotheses/models: \n")
+  cat("\n")
+  print(md_table(DF, digits = NrDigits, sig.digits = sig.digits, align = align))
 
 }

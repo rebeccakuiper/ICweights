@@ -40,7 +40,7 @@
 #' # In Rstudio, use 'ICw$' to see what output there is. The following is available:
 #' #' ICw$IC
 #' ICw$IC.weights
-#' ICw$rel.IC.weights
+#' ICw$ratio.IC.weights
 #'
 
 
@@ -79,21 +79,21 @@ IC.weights <- function(IC, Name_Hypo = NULL) {
   weight_m <- exp(-0.5*(IC-minIC)) / sum(exp(-0.5*(IC-minIC)))
   names(weight_m) <- Name_Hypo
   #
-  rel.IC.weights <- weight_m %*% t(1/weight_m)
-  rownames(rel.IC.weights) <- Name_Hypo
-  colnames(rel.IC.weights) <- paste0("vs ", Name_Hypo)
+  ratio.IC.weights <- weight_m %*% t(1/weight_m)
+  rownames(ratio.IC.weights) <- Name_Hypo
+  colnames(ratio.IC.weights) <- paste0("vs ", Name_Hypo)
 
 
   # Ouput
   #DF <- data.frame(IC = IC,
   #           IC.weights = weight_m,
-  #           rel.IC.weights = rel.IC.weights)
+  #           ratio.IC.weights = ratio.IC.weights)
   #class(DF) <- c("ICw", "data.frame")
   #DF
 
   final <- list(IC = IC,
               IC.weights = weight_m,
-              rel.IC.weights = rel.IC.weights)
+              ratio.IC.weights = ratio.IC.weights)
   class(final) <- c("ICw", "list")
   final
   #print.ICw(final)

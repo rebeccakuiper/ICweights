@@ -47,6 +47,6 @@ summary(ICw, digits = 4)
 # In Rstudio, use 'ICw$' to see what output there is. The following is available:
 #' ICw$IC
 ICw$IC.weights
-ICw$rel.IC.weights
+ICw$ratio.IC.weights
 
 }
