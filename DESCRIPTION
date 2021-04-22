@@ -10,8 +10,8 @@ Authors@R:
 Description: This function transforms IC values into IC weights: IC values denote the ordering of hypotheses/models, while IC weights quantify the relative strength of hypotheses/models. 
 Depends: R (>= 3.5.1),
 	jtools,
-	restriktor,
-	MASS
+	MASS,
+	restriktor
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
